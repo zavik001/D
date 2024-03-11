@@ -7,7 +7,7 @@ This repository contains codes for contests, problems from university, and other
 - **Algorithmic training from Yandex:**
   - Algorithm training 5.0: Version 5.0 of the training.
   - Algorithm training 4.0: Version 4.0 of the training.
-- **NSTU**: In this folder, you will find materials from your university.
+- **NSTU**: In this folder, you will find materials from my university where I study.
 - **Codeforces**: Here you will find solutions to problems from the Codeforces platform.
 
 ## Usage Instructions
