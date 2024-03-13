@@ -1,1 +1,124 @@
-100 1 1 
+COMMON /VAR/x_min,x_max,x_step,y_min,y_max,y_step
+COMMON /TABLE/n,m
+COMMON /PI/pi
+COMMON /eps/eps,epsx,epsy
+pi=3.1415926
+eps=0.0001
+CALL INPUT
+CALL COLUMNS
+CALL OUTPUT
+END
+SUBROUTINE INPUT
+COMMON /VAR/ x_min,x_max,x_step,y_min,y_max,y_step
+COMMON /eps/ eps,epsx,epsy
+OPEN (1,FILE='input.txt')
+READ (1,*) x_min,x_max,x_step,y_min,y_max,y_step
+CLOSE(1)
+CALL EPS_X_Y
+IF (x_min.GT.x_max.OR.y_min.GT.y_max)THEN
+PRINT *,'The minimum is greater than the maximum'
+PAUSE
+STOP
+END IF
+IF (x_step.LT.0.OR.y_step.LT.0)THEN
+PRINT *,'Negative step'
+PAUSE
+STOP
+END IF
+IF (ABS(x_step).LE.epsx.AND.(x_max-x_min).GT.epsx) THEN
+PRINT *,'Incorrect data'
+PAUSE
+STOP
+END IF
+IF (ABS(y_step).LE.epsy.AND.(y_max-y_min).GT.epsy) THEN
+PRINT *,'Incorrect data'
+PAUSE
+STOP
+END IF
+IF(x_step.GT.epsx) THEN
+IF (ABS(DEGREE(x_max)-DEGREE(x_step)).GE.4.OR.
+> ABS(DEGREE(x_min)-DEGREE(x_step)).GE.4)THEN
+PRINT *,'Invisible step by x'
+PAUSE
+STOP
+END IF
+END IF
+IF(y_step.GT.epsy) THEN
+IF (ABS(DEGREE(y_max)-DEGREE(y_step)).GE.4.OR.
+> ABS(DEGREE(y_min)-DEGREE(y_step)).GE.4)THEN
+PRINT *,'Invisible step by y'
+PAUSE
+STOP
+END IF
+END IF
+END
+SUBROUTINE COLUMNS
+COMMON /TABLE/ n,m
+COMMON /VAR/ x_min,x_max,x_step,y_min,y_max,y_step
+COMMON /eps/ eps,epsx,epsy
+IF (ABS(x_step).LE.epsx.OR.(x_max-x_min).LE.epsx)THEN
+n=1
+ELSE
+IF (ABS(MOD((x_max-x_min),x_step)).LE.eps)THEN
+n=(x_max-x_min+x_step/2)/x_step+1
+ELSE
+n=(x_max-x_min)/x_step+2
+END IF
+END IF
+IF (ABS(y_step).LE.epsy.OR.(y_max-y_min).LE.epsy)THEN
+m=1
+ELSE
+IF (ABS(MOD((y_max-y_min),y_step)).LE.eps)THEN
+m=(y_max-y_min+y_step/2)/y_step+1
+ELSE
+m=(y_max-y_min)/y_step+2
+END IF
+END IF
+END
+SUBROUTINEOUTPUT
+COMMON /VAR/ x_min,x_max,x_step,y_min,y_max,y_step
+COMMON /TABLE/ n,m
+COMMON /PI/ pi
+COMMON /eps/ eps,epsx,epsy
+x_current=x_min
+y_current=y_min
+OPEN(2, file='output.txt')
+WRITE(2,20)'x\y '
+DO i=0,m-2
+IF ((ABS(y_current+y_step)).GE.(ABS(epsy))) THEN
+y_current=y_min+y_step*i
+WRITE (2,10) y_current
+ELSE
+y_current=0
+WRITE (2,10) y_current
+END IF
+END DO
+WRITE(2,10) y_max
+WRITE(2,50)
+write(2,20) ' ----------'
+DO i=1,m
+write(2,40) ' ----------'
+END DO
+WRITE(2,50)
+DO i=0,n-1
+IF((x_min + x_step * i).GT.x_max)THEN
+x_current = x_max
+ELSE
+IF(ABS(x_min + x_step * i).LE.epsx)THEN
+x_current = 0
+ELSE
+x_current = x_min + x_step * i
+END IF
+END IF
+WRITE (2,30) x_current
+y_current=y_min
+DO j=1,m
+IF(ABS(COS((x_current+y_current)*pi/180)).LE.eps) THEN
+WRITE(2,40)'inf '
+ELSE
+IF(ABS(SIN((x_current+y_current)*pi/180)).LE.eps) THEN
+func=0E4
+WRITE(2,10) func
+ELSE
+func=TAN((x_current+y_current)*pi/180)
+
