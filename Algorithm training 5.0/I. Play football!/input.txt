@@ -1,0 +1,8 @@
+"First team" - "Second team" 3:4
+Player A 87'
+Player B 88'
+Player A 89'
+Player AA 10'
+Player CC 20'
+Player CC 77'
+Player CC 90'
