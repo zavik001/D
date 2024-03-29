@@ -1,45 +1,80 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <iomanip>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-struct Player 
-{
-   double x, y, v;
-};
+struct Player { double x, y, v; };
 
-int main() {
+double distance(double x1, double y1, double x2, double y2) { return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); }
+
+double segment(double x1, double y1, double r1, double x2, double y2, double r2) 
+{
+   double d = distance(x1, y1, x2, y2);
+
+   if (d <= abs(r1 - r2))
+      return M_PI * pow(min(r1, r2), 2);  
+
+   double theta1 = 2 * acos((pow(r1, 2) - pow(r2, 2) + pow(d, 2)) / (2 * r1 * d));
+   double theta2 = 2 * acos((pow(r2, 2) - pow(r1, 2) + pow(d, 2)) / (2 * r2 * d));
+
+   double area1 = 0.5 * theta1 * pow(r1, 2) - 0.5 * pow(r1, 2) * sin(theta1);
+   double area2 = 0.5 * theta2 * pow(r2, 2) - 0.5 * pow(r2, 2) * sin(theta2);
+
+   double intersection_area = area1 + area2;
+   return intersection_area;
+}
+
+bool check(const vector<Player>& P, pair<double, double>& A, double m, int D) 
+{
+   double totalArea = 0; 
+   for (const auto& player : P) 
+   {
+      double d = distance(0, 0, player.x,player.x);
+      double r = player.v * m;
+
+      if (d < D + r) 
+      {
+         double s = segment(0, 0, D, player.x, player.x, r);
+         totalArea += s;
+      }
+      cout << totalArea;
+   }
+   if (totalArea >= 0)
+   {
+      A = {0, 0};
+      return true;
+   }
+   else
+      return false;
+}
+
+int main() 
+{
    double D;
    int N;
    cin >> D >> N;
-   vector<Player> players(N);
+   vector<Player> P(N);
    for (int i = 0; i < N; ++i) 
+      cin >> P[i].x >> P[i].y >> P[i].v;
+
+   pair<double, double> A{0, 0};
+   double m = 1;
+   bool t = check(P, A, m, D);
+   cout << endl << t ;
+
+   /*
+   double l = 0, r = DBL_MAX, t = DBL_MAX;
+   pair<double, double> A{0, 0};
+   while (l <= r)
    {
-      cin >> players[i].x >> players[i].y >> players[i].v;
-   }
-
-   double left = 0, right = D;
-   for (int i = 0; i < 100; ++i) 
-   {
-      double mid = (left + right) / 2;
-      double min_time = 1e9;
-      for (auto &player : players) 
+      double m = l + (r - l) / 2;
+      if (check(P, A, m, D))
       {
-         double dist = sqrt(player.x * player.x + (player.y - mid) * (player.y - mid));
-         min_time = min(min_time, dist / player.v);
+         t = m;
+         r = m - 0.00001;
       }
-      if (min_time * min_time >= mid) 
-      {
-         right = mid;
-      } else {
-         left = mid;
-      }
+      else
+         l = m + 0.00001;
    }
-
-   cout << fixed << setprecision(5) << sqrt(left) << "\n";
-   cout << "0.00000 " << fixed << setprecision(5) << left << "\n";
-
+   cout << fixed << setprecision(5) << t << endl << A.first << " " << A.second;
+   */
    return 0;
 }
