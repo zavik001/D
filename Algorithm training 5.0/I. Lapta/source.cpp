@@ -1,80 +1,76 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct Player { double x, y, v; };
+double d;
+int n;
+vector<double> x, y, v;
 
-double distance(double x1, double y1, double x2, double y2) { return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); }
-
-double segment(double x1, double y1, double r1, double x2, double y2, double r2) 
+bool pointincircle(double x0, double y0, double r0, double xp, double yp) 
 {
-   double d = distance(x1, y1, x2, y2);
-
-   if (d <= abs(r1 - r2))
-      return M_PI * pow(min(r1, r2), 2);  
-
-   double theta1 = 2 * acos((pow(r1, 2) - pow(r2, 2) + pow(d, 2)) / (2 * r1 * d));
-   double theta2 = 2 * acos((pow(r2, 2) - pow(r1, 2) + pow(d, 2)) / (2 * r2 * d));
-
-   double area1 = 0.5 * theta1 * pow(r1, 2) - 0.5 * pow(r1, 2) * sin(theta1);
-   double area2 = 0.5 * theta2 * pow(r2, 2) - 0.5 * pow(r2, 2) * sin(theta2);
-
-   double intersection_area = area1 + area2;
-   return intersection_area;
+   return pow(xp - x0, 2) + pow(yp - y0, 2) - pow(r0, 2) < 0.000001;
 }
 
-bool check(const vector<Player>& P, pair<double, double>& A, double m, int D) 
+pair<bool, pair<double, double>> checkrect(double xll, double yll, double xru, double yru, double time) 
 {
-   double totalArea = 0; 
-   for (const auto& player : P) 
-   {
-      double d = distance(0, 0, player.x,player.x);
-      double r = player.v * m;
+   if (!pointincircle(0, 0, d, xll, yll) &&
+      !pointincircle(0, 0, d, xll, yru) &&
+      !pointincircle(0, 0, d, xru, yll) &&
+      !pointincircle(0, 0, d, xru, yru))
+      return make_pair(false, make_pair(0, 0));
 
-      if (d < D + r) 
-      {
-         double s = segment(0, 0, D, player.x, player.x, r);
-         totalArea += s;
-      }
-      cout << totalArea;
-   }
-   if (totalArea >= 0)
+   if (xru - xll < 0.000001)
+      return make_pair(true, make_pair((xll + xru) / 2, (yll + yru) / 2));
+
+   for (int i = 0; i < n; i++) 
    {
-      A = {0, 0};
-      return true;
+      if (pointincircle(x[i], y[i], v[i] * time, xll, yll) &&
+         pointincircle(x[i], y[i], v[i] * time, xll, yru) &&
+         pointincircle(x[i], y[i], v[i] * time, xru, yll) &&
+         pointincircle(x[i], y[i], v[i] * time, xru, yru))
+         return make_pair(false, make_pair(0, 0));
    }
-   else
-      return false;
+
+   vector<double> xs = {xll, (xll + xru) / 2, xru};
+   vector<double> ys = {yll, (yll + yru) / 2, yru};
+   for (int i = 0; i < 2; i++) 
+   {
+      for (int j = 0; j < 2; j++) 
+      {
+         pair<bool, pair<double, double>> quarter = checkrect(xs[i], ys[j], xs[i + 1], ys[j + 1], time);
+         if (quarter.first)
+               return quarter;
+      }
+   }
+   return make_pair(false, make_pair(0, 0));
 }
 
-int main() 
+pair<bool, pair<double, double>> check(double time) 
 {
-   double D;
-   int N;
-   cin >> D >> N;
-   vector<Player> P(N);
-   for (int i = 0; i < N; ++i) 
-      cin >> P[i].x >> P[i].y >> P[i].v;
+   return checkrect(-d, 0, d, d, time);
+}
 
-   pair<double, double> A{0, 0};
-   double m = 1;
-   bool t = check(P, A, m, D);
-   cout << endl << t ;
+int main() {
+   cin >> d >> n;
+   x.resize(n);
+   y.resize(n);
+   v.resize(n);
+   for (int i = 0; i < n; i++) 
+      cin >> x[i] >> y[i] >> v[i];
 
-   /*
-   double l = 0, r = DBL_MAX, t = DBL_MAX;
-   pair<double, double> A{0, 0};
-   while (l <= r)
+   double l = 0;
+   double r = 4 * d;
+   while (r - l > 0.000001) 
    {
-      double m = l + (r - l) / 2;
-      if (check(P, A, m, D))
-      {
-         t = m;
-         r = m - 0.00001;
-      }
+      double m = (l + r) / 2;
+      if (check(m).first)
+         l = m;
       else
-         l = m + 0.00001;
+         r = m;
    }
-   cout << fixed << setprecision(5) << t << endl << A.first << " " << A.second;
-   */
+
+   pair<bool, pair<double, double>> now = check(l);
+   cout << l << endl;
+   cout << now.second.first << " " << now.second.second << endl;
+
    return 0;
 }
