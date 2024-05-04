@@ -1,0 +1,51 @@
+class RandomizedSet 
+{
+private:
+    unordered_map<int, int> m;
+    vector<int> v;
+
+public:
+    RandomizedSet() 
+    {
+        [=](){
+           ios_base::sync_with_stdio(false);
+           cin.tie(nullptr);
+           cout.tie(nullptr); 
+        }();
+    }
+
+    bool insert(int val) 
+    {
+        if (m.count(val))
+        {
+            return false;
+        }
+        v.push_back(val);
+        size_t n = v.size();
+        m[val] = n - 1;
+        return true;
+    }
+
+    bool remove(int val) 
+    {
+        if (const auto it = m.find(val); it != m.end())
+        {
+            int last = v.back();
+            m[last] = m[val];
+
+            v[m[val]] = last;
+            v.pop_back();
+            m.erase(val);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    int getRandom() 
+    {
+        int random_index = rand() % v.size();
+        return v[random_index];
+    }
+};

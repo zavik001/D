@@ -1,0 +1,31 @@
+class solution
+{
+public:
+   bool check(string s1, string s2)
+   {
+      size_t n1 = s1.size(), n2 = s2.size();
+
+      vector<int> V1(26, 0), V2(26, 0);
+
+      if (n2 < n1)
+         return false;
+      
+      for (int i = 0; i < n1; i++)
+      {
+         V1[s1[i] - 'a']++;
+         V2[s2[i] - 'a']++;
+      }
+
+      if (V1 == V2)
+         return true;
+
+      for (int i = n1; i < n2; i++)
+      {
+         V2[s2[i - n1] - 'a']--;
+         V2[s2[i] - 'a']++;
+         
+         if (V1 == V2)
+            return true;
+      }
+   }
+} 
