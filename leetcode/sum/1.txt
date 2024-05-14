@@ -1,0 +1,22 @@
+void solution (vector<int> &A, int k)                  //O(NlogN)
+{
+   size_t size_A = A.size();
+   
+   sort(A.begin(), A.end());
+
+   int left = 0, right = n - 1;
+   int min_ = INT_MAX;
+
+   for ( ; left < right; )
+   {
+      if (abs(A[left] + A[right] - k) < min_)
+         min_ = A[left] + A[right];
+      
+      if (A[left] + A[right] > k)
+         right--;
+      else 
+         left++;
+   }
+
+   cout << min_;
+}

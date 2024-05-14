@@ -2,34 +2,17 @@
 #include <algorithm>
 using namespace std;
 
-void solution(string &s)
+void solution(int x, int y)
 {
-   size_t n = s.size();
+   int t = 10;
 
-   for (int i = 0; i < n; )
-   {
-      if (s[i] == ' ')
-         i++;
-      else
-      {
-         int start = i, end = i;
+   auto summ = [x, t] {return x + a;};
 
-         for ( ; end < n && s[end] != ' '; end++);
-         i = end + 1;
-
-         reverse(s.begin() + start, s.begin() + end);
-      }
-   }
+   cout << summ(100);
 }
 
 int main ()
 {
-   string s;
-   getline(cin, s);
-
-   solution(s);
-
-   cout << s;
-
+   solution(10, 10);
    return 0;
 }

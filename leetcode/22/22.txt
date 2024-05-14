@@ -1,0 +1,28 @@
+class Solution 
+{
+public:
+   vector<string> ans;
+
+   void generation(int n, int open, int close, string s)
+   {
+      if (close == n)
+      {
+         ans.push_back(s);
+         return;
+      }
+      else
+      {
+         if (open > close)
+            generation(n, open, close + 1, s + ')');
+         if (open < n)
+            generation(n, open + 1, close, s + '(');
+      }
+   } 
+
+   vector<string> generateParenthesis(int n)
+   {
+      generation(n, 0, 0, "");
+
+      return ans;
+   }
+};

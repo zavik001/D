@@ -1,0 +1,22 @@
+
+class LRUCache 
+{
+private:
+   size = 0;
+
+public:
+   LRUCache(int capacity) 
+   {
+      size = capacity;
+   }
+   
+   int get(int key) 
+   {
+        
+   }
+    
+   void put(int key, int value) 
+   {
+        
+   }
+};

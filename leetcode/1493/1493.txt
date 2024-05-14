@@ -1,0 +1,32 @@
+class Solution 
+{
+public:
+    int longestSubarray(vector<int>& nums) 
+    {
+       size_t n = nums.size();
+       int max_len = 0, prev = 0, tec = 0;
+       
+       for (int i = 0; i < n; i++)
+       {
+            if (nums[i] == 1)
+            {
+                tec++;
+            }
+            else
+            {
+                if (i < n - 1)
+                    if (nums[i+1] != 0)
+                        prev = tec;
+                    else
+                        prev = 0; 
+
+                tec = 0;
+            }
+            max_len = max(max_len, tec + prev);
+            if (tec == n)
+                max_len--;
+       }
+
+       return max_len;
+    }
+};
