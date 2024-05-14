@@ -7,7 +7,7 @@ void RemoveSpaces(string &s)
    stringstream ss(s);
    while (ss >> s)
       temp += s + ' ';
-   s = temp.substr(0, temp.length() - 1);  // Удалить последний пробел
+   s = temp.substr(0, temp.length() - 1); 
 }
 
 int main()
