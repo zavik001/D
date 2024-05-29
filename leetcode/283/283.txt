@@ -1,0 +1,24 @@
+class Solution 
+{
+public:
+    void moveZeroes(vector<int>& nums) 
+    {
+	size_t n = nums.size();
+	int cur = -1;
+	
+	for (int i = 0; i < n; i++)
+	{	
+	    if (cur == -1 && nums[i] == 0)
+	    {
+		    cur = i;
+	    }
+	    if (nums[i] != 0 && cur != -1)
+	    {
+	        swap(nums[i], nums[cur]);
+		    cur++;
+	    }	
+	}
+	for (int i = 0; i < n; i++)
+		cout << nums[i] << " ";	
+    }
+};
