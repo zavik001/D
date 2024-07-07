@@ -7,34 +7,13 @@ public class BasilGarden {
 
    public static long MinSec(int[] arr) {
       int n = arr.length;
-      long passedSec = 0;
+      long minSecTree = 0;
 
-      for (int i = n - 1; i > 0; i--) {
-         if (arr[i-1] > arr[i]) {
-            if (arr[i-1] == arr[i] + passedSec) {
-               passedSec++;
-            }
-            passedSec += arr[i];
-            arr[i-1] -= passedSec;
-            arr[i] -= passedSec;
-            if (arr[i-1] < 0) {
-               arr[i-1] = 0;
-            }
-            if (arr[i] < 0) {
-               arr[i] = 0;
-            }
-         } else {
-            passedSec += arr[i];
-            arr[i] = 0;
-            arr[i - 1] = 1;
-         }
+      for (int i = n - 1; i >= 0; i--) {
+         minSecTree = Math.max(minSecTree, arr[i] + i);
       }
 
-      if (arr[0] < 0) {
-         arr[0] = 0;
-      }
-
-      return passedSec + arr[0];
+      return minSecTree;
    }
    public static void main(String[] args) {
       Scanner input = new Scanner(System.in);
