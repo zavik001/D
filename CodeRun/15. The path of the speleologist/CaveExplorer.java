@@ -44,7 +44,7 @@ public class CaveExplorer {
             }
         }
 
-        return -1; // Should never reach here as the exit is always possible
+        return -1; 
     }
 
     public static void main(String[] args) {
@@ -54,18 +54,25 @@ public class CaveExplorer {
         visited = new boolean[N][N][N];
 
         int startX = -1, startY = -1, startZ = -1;
+        scanner.nextLine(); 
 
         for (int z = 0; z < N; z++) {
-            scanner.nextLine(); // skip the empty line
+            if (z > 0) {
+                scanner.nextLine(); 
+            }
             for (int x = 0; x < N; x++) {
                 String line = scanner.nextLine();
+                if (line.length() == 0) { 
+                    x--; 
+                    continue;
+                }
                 for (int y = 0; y < N; y++) {
                     cave[x][y][z] = line.charAt(y);
                     if (cave[x][y][z] == 'S') {
                         startX = x;
                         startY = y;
                         startZ = z;
-                        cave[x][y][z] = '.'; // treat the start position as free space
+                        cave[x][y][z] = '.'; 
                     }
                 }
             }
